@@ -1,0 +1,17 @@
+<taglib>
+	<uri>http://localhost:8080/08-03/math02</uri>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<tag>
+		<name>functions</name>
+		<tag-class>com.MathTag02</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>num</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+		<description>Sends a math excaption to the JSP</description>
+	</tag>
+</taglib>

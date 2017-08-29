@@ -1,0 +1,29 @@
+<taglib>
+	<uri>http://localhost:8080/08-03/choose</uri>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>f</short-name>
+	<tag>
+		<name>choose</name>
+		<tag-class>com.ChooseTag</tag-class>
+		<body-content>scriptless</body-content>
+	</tag>
+	<tag>
+		<name>when</name>
+		<tag-class>com.WhenTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>test</name>
+			<required>true</required>
+			<rtextprvalue>true</rtextprvalue>
+			<type>boolean</type>
+			<fragment>true</fragment>
+		</attribute>
+	</tag>
+	<tag>
+		<name>otherwise</name>
+		<tag-class>com.OtherwiseTag</tag-class>
+		<body-content>scriptless</body-content>
+	</tag>
+
+</taglib>

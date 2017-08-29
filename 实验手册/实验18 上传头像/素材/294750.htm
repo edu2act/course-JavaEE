@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>用commons-fileupload实现的上传文件同时提交form中的参数 - Java - ITeye论坛</title>
+    <meta name="description" content="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 最近项目中遇到要提交文件并且提交form中的诸如&lt;input type=text id=&quot;height&quot; name=&quot;height&quot; value=&quot;&quot;&gt;之类的参数，一开始一直遇到怎么也获取不到值的情况，比如用request.getAttribute(&quot;height&quot;)之类的，后来查了文档才知道不能 ...">
+    <meta name="keywords" content="  Java">
+    <link rel="shortcut icon" href="http://www.iteye.com/images/favicon.ico" type="image/x-icon">
+    <link href="http://www.iteye.com/rss/board/Java" rel="alternate" title="ITeye论坛" type="application/rss+xml">
+    <link rel="search" type="application/opensearchdescription+xml" href="http://www.iteye.com/open_search.xml" title="ITeye">
+    <link href="294750_files/forum.css" media="screen" rel="stylesheet" type="text/css">
+    <script src="294750_files/ga.js" async="" type="text/javascript"></script><script src="294750_files/application.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-535605-1']);
+  _gaq.push(['_setDomainName', 'iteye.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <link href="294750_files/SyntaxHighlighter.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="294750_files/shCoreCommon.js" type="text/javascript"></script>
+<script src="294750_files/hotkey.js" type="text/javascript"></script>
+  <script src="294750_files/code_favorites.js" type="text/javascript"></script>
+          <script src="294750_files/dragdrop.js" type="text/javascript"></script>
+          <style type="text/css">.dp-j .annotation { color: #646464; }.dp-j .number { color: #C00000; }</style></head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div class="clearfix"><div id="user_nav">
+      <a href="http://www.iteye.com/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="http://www.iteye.com/login">登录</a>
+    <a href="http://www.iteye.com/signup" class="nobg">注册</a>
+  </div>
+</div>
+        <div class="clearfix">
+          <div id="branding">
+            <a href="http://www.iteye.com/"><img alt="ITeye-最棒的软件开发交流社区" src="294750_files/logo.gif" title="ITeye-最棒的软件开发交流社区"></a>
+          </div>
+          <div id="gg"><a href="http://www.iteye.com/clicks/696" target="_blank"><img src="294750_files/chromexn728_90.jpg"></a></div>
+        </div>
+      </div>
+
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+          
+
+<div class="clearfix">
+  <div class="crumbs">
+    <a href="http://www.iteye.com/forums">论坛首页</a> <span class="arrow">→</span>
+    <a href="http://www.iteye.com/forums/board/Java">Java编程和Java企业应用版</a> <span class="arrow">→</span>
+    
+    <h1>用commons-fileupload实现的上传文件同时提交form中的参数</h1>
+  </div>
+</div>
+
+<div id="forum_tag_list">
+  <a href="http://www.iteye.com/forums/board/Java">全部</a>
+      <a href="http://www.iteye.com/forums/tag/Hibernate">Hibernate</a>
+      <a href="http://www.iteye.com/forums/tag/Spring">Spring</a>
+      <a href="http://www.iteye.com/forums/tag/Struts">Struts</a>
+      <a href="http://www.iteye.com/forums/tag/iBATIS">iBATIS</a>
+      <a href="http://www.iteye.com/forums/tag/J2EE">企业应用</a>
+      <a href="http://www.iteye.com/forums/tag/Design-Pattern">设计模式</a>
+      <a href="http://www.iteye.com/forums/tag/DAO">DAO</a>
+      <a href="http://www.iteye.com/forums/tag/Object-Domain">领域模型</a>
+      <a href="http://www.iteye.com/forums/tag/OO">OO</a>
+      <a href="http://www.iteye.com/forums/tag/Tomcat">Tomcat</a>
+      <a href="http://www.iteye.com/forums/tag/SOA">SOA</a>
+      <a href="http://www.iteye.com/forums/tag/JBoss">JBoss</a>
+      <a href="http://www.iteye.com/forums/tag/Swing">Swing</a>
+      <a href="http://www.iteye.com/forums/tag/Java">Java综合</a>
+  </div>
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper">
+    <div id="forum_recommended_f4"><a href="http://www.iteye.com/clicks/593" target="_blank"><span style="color: blue; font-weight: bold;">最成熟稳定甘特图控件,支持Java和.Net</span></a></div>
+    
+    <div class="info">浏览 3678 次</div>
+  </div>
+</div>
+
+
+
+<table id="forum_main" cellspacing="1">
+  <thead>
+    <tr>
+      <th colspan="2" class="topic_title">
+        <div class="wrapper"><span class="locked">锁定老帖子</span> <a href="http://www.iteye.com/topic/294750">主题：用commons-fileupload实现的上传文件同时提交form中的参数</a></div>
+        <div id="topic_rate_box">精华帖 (0) :: 良好帖 (0) :: 新手帖 (0) :: 隐藏帖 (0)</div>
+      </th>
+    </tr>
+    <tr>
+      <td class="first_col">作者</td>
+      <td class="last_col">正文
+      
+      </td>
+    </tr>
+  </thead>
+  <tbody id="posts">
+    <tr id="793170">
+  <td class="postauthor">
+    <ul>
+      <li class="name">paskaa</li>
+      <li>等级: <img src="294750_files/star2.gif" alt="二星会员" title="二星会员"></li>
+      <li><a href="http://paskaa.iteye.com/" target="_blank"><img alt="paskaa的博客" class="logo" src="294750_files/308362f2-f808-3c0c-acb8-ded341330ce3.jpg" title="paskaa的博客: paskaa的博客"></a></li>
+      <li>性别: <img src="294750_files/icon_minigender_1.gif" title="男"></li>      <li>文章: 38</li>
+      <li>积分: 190</li>
+      <li>来自: 上海</li>
+      <li><img src="294750_files/offline.gif"></li>
+    </ul>
+  </td>
+  <td class="postcontent">
+    <div class="postactions">
+      <div class="description">
+        &nbsp;&nbsp;
+        发表时间：2008-12-15&nbsp;&nbsp;
+        
+      </div>
+      <div class="links">
+        
+        
+          
+          
+        
+      </div>
+    </div>
+    <div class="postbody clearfix">
+      
+        
+              <script type="text/javascript">
+      var hunters = ["\u003Ca href='/jobs/515' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u4e0a\u6d77: \u003C/span\u003E \u4e0a\u6d77\uff1a\u5929\u4f1a\u7693\u95fb\u8bda\u8058\u8d44\u6df1Java\u67b6\u6784\u5e08\u003C/a\u003E","\u003Ca href='/jobs/712' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E ITeye\u7f51\u7ad9\u8bda\u8058Java\u9ad8\u7ea7\u641c\u7d22\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/1846' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E ITeye\u7f51\u7ad9\u8bda\u8058\u7f51\u7ad9\u4ea7\u54c1UED\u4e3b\u7ba1\u003C/a\u003E","\u003Ca href='/jobs/714' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E ITeye\u7f51\u7ad9\u8bda\u8058Ruby\u5de5\u7a0b\u5e08\u003C/a\u003E","\u003Ca href='/jobs/1847' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E ITeye\u7f51\u7ad9\u8bda\u8058\u4ea7\u54c1\u4ea4\u4e92\u8bbe\u8ba1\u003C/a\u003E","\u003Ca href='/jobs/1848' target='_blank' style='color:#000;'\u003E\u003Cspan style='font-weight:bold;'\u003E\u5317\u4eac: \u003C/span\u003E ITeye\u7f51\u7ad9\u8bda\u8058\u7f51\u7ad9\u7f16\u8f91\u003C/a\u003E"]
+      var hunter_id = Math.ceil(Math.random() * hunters.length) - 1;
+      if(hunter_id == -1) hunter_id = 0;
+    </script>
+    <div id="hunter_recommended" style="background: none repeat scroll 0% 0% rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); padding: 4px; margin-bottom: 10px; float: left; width: 557px;">
+      <span id="hunters_nav" style="margin-right:5px;">
+        <a href="#" onclick="hunter_id <= 0 ? hunter_id = hunters.length - 1 : hunter_id--; $('hunters').update(hunters[hunter_id]);return false;" style="border: 1px solid rgb(204, 204, 204); padding: 0pt 3px; size: 13px; text-decoration: none;">&lt;</a>
+        <a href="#" onclick="hunter_id >= hunters.length - 1 ? hunter_id = 0 : hunter_id++; $('hunters').update(hunters[hunter_id]);return false;" style="border: 1px solid rgb(204, 204, 204); padding: 0pt 3px; size: 13px; text-decoration: none;">&gt;</a>
+      </span>
+      猎头职位: <span id="hunters"><a href="http://www.iteye.com/jobs/714" target="_blank" style="color: rgb(0, 0, 0);"><span style="font-weight:bold;">北京: </span> ITeye网站诚聘Ruby工程师</a></span>
+      <script type="text/javascript">$('hunters').update(hunters[hunter_id]);</script>
+    </div>
+
+        
+      
+                                            <div style="position: relative;" id="related_topics">相关文章: <span class="close"><a href="#" onclick="$('related_topics').hide();if($('hunter_recommended')){$('hunter_recommended').style.width='780px';} return false;" title="关闭">&nbsp;</a></span>
+              <ul>
+                                    <li><a href="http://www.iteye.com/topic/1028917" title=" 开放JSP版KindEditor的附件JAR包源码" target="_blank"> 开放JSP版KindEditor的附件JAR包源码</a></li>
+                                      <li><a href="http://www.iteye.com/topic/709276" title="利用commons-fileupload 实现文件上传终极版及commons-fileupload和commons-io包关系" target="_blank">利用commons-fileupload 实现文件上传终极版及commons-fileupload和commons-io包关系</a></li>
+                                      <li><a href="http://www.iteye.com/topic/545392" title="使用common-fileUpload制作文件上传" target="_blank">使用common-fileUpload制作文件上传</a></li>
+                                  </ul>
+                <br><span>推荐群组: <a href="http://ext.group.iteye.com/" target="_blank">EXT</a></span>
+                <br><a href="http://www.iteye.com/wiki/topic/294750" target="_blank">更多相关推荐</a>
+              </div>
+              <script type="text/javascript">
+                if($('hunter_recommended')) {
+                  $('hunter_recommended').setStyle({cssFloat: 'left', width: '557px'})
+                }
+                new Draggable("related_topics");
+              </script>
+                              
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+最近项目中遇到要提交文件并且提交form中的诸如&lt;input type=text id="height" name="height" 
+value=""&gt;之类的参数，一开始一直遇到怎么也获取不到值的情况，比如用request.getAttribute("height")之类
+的，后来查了文档才知道不能这么用的。需要用循环fileList才可以取到form中提交的属性，以下是代码</p>
+<div id="" class="dp-highlighter"><div class="bar"><div class="tools">Java代码 <embed src="294750_files/clipboard_new.swf" flashvars="clipboard=public%20void%20doPost(HttpServletRequest%20request%2C%20HttpServletResponse%20response)%0A%09%09%09throws%20ServletException%2C%20IOException%20%7B%0A%09%09final%20long%20MAX_SIZE%20%3D%203%20*%201024%20*%201024%3B%2F%2F%20%E8%AE%BE%E7%BD%AE%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E6%9C%80%E5%A4%A7%E4%B8%BA%203M%0A%09%09%2F%2F%20%E5%85%81%E8%AE%B8%E4%B8%8A%E4%BC%A0%E7%9A%84%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8%0A%09%09final%20String%5B%5D%20allowedExt%20%3D%20new%20String%5B%5D%20%7B%20%22jpg%22%2C%20%22jpeg%22%2C%20%22gif%22%2C%22png%22%20%7D%3B%09%09%0A%09%09%0A%09%09response.setContentType(%22text%2Fhtml%22)%3B%0A%09%09%2F%2F%20%E8%AE%BE%E7%BD%AE%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E4%B8%BAUTF-8%2C%20%E8%BF%99%E6%A0%B7%E6%94%AF%E6%8C%81%E6%B1%89%E5%AD%97%E6%98%BE%E7%A4%BA%0A%09%09%2F%2F%20response.setCharacterEncoding(%22GBK%22)%3B%0A%0A%09%09%2F%2F%20%E5%AE%9E%E4%BE%8B%E5%8C%96%E4%B8%80%E4%B8%AA%E7%A1%AC%E7%9B%98%E6%96%87%E4%BB%B6%E5%B7%A5%E5%8E%82%2C%E7%94%A8%E6%9D%A5%E9%85%8D%E7%BD%AE%E4%B8%8A%E4%BC%A0%E7%BB%84%E4%BB%B6ServletFileUpload%0A%09%09DiskFileItemFactory%20dfif%20%3D%20new%20DiskFileItemFactory()%3B%0A%09%09dfif.setSizeThreshold(4096)%3B%2F%2F%20%E8%AE%BE%E7%BD%AE%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E6%97%B6%E7%94%A8%E4%BA%8E%E4%B8%B4%E6%97%B6%E5%AD%98%E6%94%BE%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%2C%E8%BF%99%E9%87%8C%E6%98%AF4K.%E5%A4%9A%E4%BA%8E%E7%9A%84%E9%83%A8%E5%88%86%E5%B0%86%E4%B8%B4%E6%97%B6%E5%AD%98%E5%9C%A8%E7%A1%AC%E7%9B%98%0A%09%09dfif.setRepository(new%20File(request.getRealPath(%22%2F%22)%0A%09%09%09%09%2B%20%22ImagesUploadTemp%22))%3B%2F%2F%20%E8%AE%BE%E7%BD%AE%E5%AD%98%E6%94%BE%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E7%9A%84%E7%9B%AE%E5%BD%95%2Cweb%E6%A0%B9%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84ImagesUploadTemp%E7%9B%AE%E5%BD%95%0A%0A%09%09%2F%2F%20%E7%94%A8%E4%BB%A5%E4%B8%8A%E5%B7%A5%E5%8E%82%E5%AE%9E%E4%BE%8B%E5%8C%96%E4%B8%8A%E4%BC%A0%E7%BB%84%E4%BB%B6%0A%09%09ServletFileUpload%20sfu%20%3D%20new%20ServletFileUpload(dfif)%3B%0A%09%09%2F%2F%20%E8%AE%BE%E7%BD%AE%E6%9C%80%E5%A4%A7%E4%B8%8A%E4%BC%A0%E5%B0%BA%E5%AF%B8%0A%09%09sfu.setSizeMax(MAX_SIZE)%3B%0A%0A%09%09PrintWriter%20out%20%3D%20response.getWriter()%3B%0A%09%09%2F%2F%20%E4%BB%8Erequest%E5%BE%97%E5%88%B0%20%E6%89%80%E6%9C%89%20%E4%B8%8A%E4%BC%A0%E5%9F%9F%E7%9A%84%E5%88%97%E8%A1%A8%0A%09%09List%20fileList%20%3D%20null%3B%0A%09%09try%20%7B%0A%09%09%09fileList%20%3D%20sfu.parseRequest(request)%3B%0A%09%09%7D%20catch%20(FileUploadException%20e)%20%7B%2F%2F%20%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E5%B0%BA%E5%AF%B8%E8%BF%87%E5%A4%A7%E5%BC%82%E5%B8%B8%0A%09%09%09if%20(e%20instanceof%20SizeLimitExceededException)%20%7B%0A%09%09%09%09out.print(%22%3Cscript%3Ealert('%E6%96%87%E4%BB%B6%E5%B0%BA%E5%AF%B8%E8%B6%85%E8%BF%87%E8%A7%84%E5%AE%9A%E5%A4%A7%E5%B0%8F%3A%22%20%2B%20MAX_SIZE%0A%09%09%09%09%09%09%2B%20%22%E5%AD%97%E8%8A%82')%3Bhistory.back()%3B%3C%2Fscript%3E%22)%3B%0A%09%09%09%09return%3B%0A%09%09%09%7D%0A%09%09%09e.printStackTrace()%3B%0A%09%09%7D%0A%09%09%2F%2F%20%E6%B2%A1%E6%9C%89%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%0A%09%09if%20(fileList%20%3D%3D%20null%20%7C%7C%20fileList.size()%20%3D%3D%200)%20%7B%0A%09%09%09out.print(%22%3Cscript%3Ealert('%E8%AF%B7%E9%80%89%E6%8B%A9%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6!')%3Bhistory.back()%3B%3C%2Fscript%3E%22)%3B%0A%09%09%09return%3B%0A%09%09%7D%0A%09%09HashMap%3CString%2C%20String%3E%20paramMap%20%3D%20new%20HashMap%3CString%2C%20String%3E()%3B%0A%09%09%2F%2F%20%E5%BE%97%E5%88%B0%E6%89%80%E6%9C%89%E4%B8%8A%E4%BC%A0%E7%9A%84%E6%96%87%E4%BB%B6%0A%09%09Iterator%20fileItr%20%3D%20fileList.iterator()%3B%0A%09%09%2F%2F%20%E5%BE%AA%E7%8E%AF%E5%A4%84%E7%90%86%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6%0A%09%09FileItem%20fileUp%3D%20null%3B%0A%09%09String%20path%20%3D%20null%3B%0A%09%09while%20(fileItr.hasNext())%20%7B%0A%09%09%09FileItem%20fileItem%20%3D%20null%3B%0A%09%09%09long%20size%20%3D%200%3B%0A%09%09%09%2F%2F%20%E5%BE%97%E5%88%B0%E5%BD%93%E5%89%8D%E6%96%87%E4%BB%B6%0A%09%09%09fileItem%20%3D%20(FileItem)%20fileItr.next()%3B%0A%09%09%09%2F%2F%20%E5%BF%BD%E7%95%A5%E7%AE%80%E5%8D%95form%E5%AD%97%E6%AE%B5%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%8A%E4%BC%A0%E5%9F%9F%E7%9A%84%E6%96%87%E4%BB%B6%E5%9F%9F(%3Cinput%20type%3D%22text%22%20%2F%3E%E7%AD%89)%0A%09%09%09if%20(fileItem%20%3D%3D%20null%20%7C%7C%20fileItem.isFormField())%20%7B%0A%09%09%09%09String%20formname%3DfileItem.getFieldName()%3B%2F%2F%E8%8E%B7%E5%8F%96form%E4%B8%AD%E7%9A%84%E5%90%8D%E5%AD%97%0A%09%09%09%09String%20formcontent%3DfileItem.getString()%3B%0A%09%09%09%09formname%3Dnew%20String(formname.getBytes()%2C%22GBK%22)%3B%0A%09%09%09%09formcontent%3Dnew%20String(formcontent.getBytes()%2C%22GBK%22)%3B%0A%09%09%09%09paramMap.put(formname%2C%20formcontent)%3B%0A%09%09%09%7D%0A%09%09%09else%7B%0A%09%09%09%2F%2F%E5%BE%97%E5%88%B0%E6%94%BE%E6%96%87%E4%BB%B6%E7%9A%84item%0A%09%09%09fileUp%3D%20fileItem%3B%0A%09%09%09%2F%2F%20%E5%BE%97%E5%88%B0%E6%96%87%E4%BB%B6%E7%9A%84%E5%AE%8C%E6%95%B4%E8%B7%AF%E5%BE%84%0A%09%09%09path%20%3D%20fileItem.getName()%3B%0A%09%09%09%2F%2F%20%E5%BE%97%E5%88%B0%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%A7%E5%B0%8F%0A%09%09%09size%20%3D%20fileItem.getSize()%3B%0A%09%09%09if%20(%22%22.equals(path)%20%7C%7C%20size%20%3D%3D%200)%20%7B%0A%09%09%09%09out.print(%22%3Cscript%3Ealert('%E8%AF%B7%E9%80%89%E6%8B%A9%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6!')%3Bhistory.back()%3B%3C%2Fscript%3E%22)%3B%0A%09%09%09%09return%3B%0A%09%09%09%7D%0A%09%09%09%0A%09%09%09%0A%09%09%09%0A%09%09%09%7D%0A%09%09%09%0A%09%09%7D%0A%09%09%2F%2F%20%E5%BE%97%E5%88%B0%E5%8E%BB%E9%99%A4%E8%B7%AF%E5%BE%84%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D%0A%09%09String%20t_name%20%3D%20path.substring(path.lastIndexOf(%22%5C%5C%22)%20%2B%201)%3B%0A%09%09%2F%2F%20%E5%BE%97%E5%88%B0%E6%96%87%E4%BB%B6%E7%9A%84%E6%89%A9%E5%B1%95%E5%90%8D(%E6%97%A0%E6%89%A9%E5%B1%95%E5%90%8D%E6%97%B6%E5%B0%86%E5%BE%97%E5%88%B0%E5%85%A8%E5%90%8D)%0A%09%09String%20t_ext%20%3D%20t_name.substring(t_name.lastIndexOf(%22.%22)%20%2B%201)%3B%0A%09%09%2F%2F%20%E6%8B%92%E7%BB%9D%E6%8E%A5%E5%8F%97%E8%A7%84%E5%AE%9A%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%B9%8B%E5%A4%96%E7%9A%84%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%0A%09%09int%20allowFlag%20%3D%200%3B%0A%09%09int%20allowedExtCount%20%3D%20allowedExt.length%3B%0A%09%09for%20(%3B%20allowFlag%20%3C%20allowedExtCount%3B%20allowFlag%2B%2B)%20%7B%0A%09%09%09if%20(allowedExt%5BallowFlag%5D.equals(t_ext))%0A%09%09%09%09break%3B%0A%09%09%7D%0A%09%09if%20(allowFlag%20%3D%3D%20allowedExtCount)%20%7B%0A%09%09%09StringBuffer%20sb%20%3D%20new%20StringBuffer()%3B%0A%09%09%09for%20(allowFlag%20%3D%200%3B%20allowFlag%20%3C%20allowedExtCount%3B%20allowFlag%2B%2B)%0A%09%09%09%09sb.append(%22*.%22%20%2B%20allowedExt%5BallowFlag%5D)%3B%0A%09%09%09out.println(%22%3Cscript%3Ealert('%E8%AF%B7%E4%B8%8A%E4%BC%A0%E4%BB%A5%E4%B8%8B%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%96%87%E4%BB%B6%22%20%2B%20sb.toString()%0A%09%09%09%09%09%2B%20%22')%3Bhistory.back()%3B%3C%2Fscript%3E%22)%3B%0A%09%09%09return%3B%0A%09%09%7D%0A%09%09long%20now%20%3D%20System.currentTimeMillis()%3B%0A%09%09%2F%2F%20%E6%A0%B9%E6%8D%AE%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E7%94%9F%E6%88%90%E4%B8%8A%E4%BC%A0%E5%90%8E%E4%BF%9D%E5%AD%98%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D%0A%09%09String%20prefix%20%3D%20String.valueOf(now)%3B%0A%09%09%2F%2F%20%E4%BF%9D%E5%AD%98%E7%9A%84%E6%9C%80%E7%BB%88%E6%96%87%E4%BB%B6%E5%AE%8C%E6%95%B4%E8%B7%AF%E5%BE%84%2C%E4%BF%9D%E5%AD%98%E5%9C%A8web%E6%A0%B9%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84ImagesUploaded%E7%9B%AE%E5%BD%95%E4%B8%8B%0A%09%09String%20u_name%20%3D%20request.getRealPath(%22%2F%22)%20%2B%20%22ImagesUploaded%2F%22%0A%09%09%09%09%2B%20prefix%20%2B%20%22.%22%20%2B%20t_ext%3B%0A%09%09%2F%2F%20%E7%9B%B8%E5%AF%B9%E9%A1%B9%E7%9B%AE%E8%B7%AF%E5%BE%84%0A%09%09String%20file_url%20%3D%20request.getContextPath()%20%2B%20%22%2F%22%0A%09%09%09%09%2B%20%22ImagesUploaded%2F%22%20%2B%20prefix%20%2B%20%22.%22%20%2B%20t_ext%3B%0A%09%09try%20%7B%0A%09%09%09%2F%2F%20%E4%BF%9D%E5%AD%98%E6%96%87%E4%BB%B6%0A%09%09%09fileUp.write(new%20File(u_name))%3B%0A%09%09%09out.println(%22%3Cscript%20%20type%3D'text%2Fjavascript'%3Eparent.KE.plugin%5B%5C%22image%5C%22%5D.insert('%22%20%2BparamMap.get(%22id%22)%0A%09%09%09%09%09%2B%20%22'%2C%20'%22%20%2B%20file_url%20%2B%20%22'%2C'%22%20%2BparamMap.get(%22imgWidth%22)%20%20%2B%20%22'%2C'%22%0A%09%09%09%09%09%2BparamMap.get(%22imgHeight%22)%20%20%2B%20%22'%2C'%22%20%2BparamMap.get(%22imgBorder%22)%20%20%2B%20%22'%2C'%22%20%2BparamMap.get(%22imgTitle%22)%20%0A%09%09%09%09%09%2B%20%22')%3C%2Fscript%3E%22)%3B%0A%09%09%09%0A%09%09%7D%20catch%20(Exception%20e)%20%7B%0A%09%09%09e.printStackTrace()%3B%0A%09%09%7D" quality="high" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" height="15" width="14">&nbsp;<a href="javascript:void()" title="收藏这段代码" onclick="code_favorites_do_favorite(this);return false;"><img class="star" src="294750_files/icon_star.png" alt="收藏代码"><img class="spinner" src="294750_files/spinner.gif" style="display: none;"></a></div></div><ol class="dp-j" start="1"><li><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;doPost(HttpServletRequest&nbsp;request,&nbsp;HttpServletResponse&nbsp;response)&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">throws</span><span>&nbsp;ServletException,&nbsp;IOException&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">final</span><span>&nbsp;</span><span class="keyword">long</span><span>&nbsp;MAX_SIZE&nbsp;=&nbsp;</span><span class="number">3</span><span>&nbsp;*&nbsp;</span><span class="number">1024</span><span>&nbsp;*&nbsp;</span><span class="number">1024</span><span>;</span><span class="comment">//&nbsp;设置上传文件最大为&nbsp;3M</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;允许上传的文件格式的列表</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">final</span><span>&nbsp;String[]&nbsp;allowedExt&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;String[]&nbsp;{&nbsp;</span><span class="string">"jpg"</span><span>,&nbsp;</span><span class="string">"jpeg"</span><span>,&nbsp;</span><span class="string">"gif"</span><span>,</span><span class="string">"png"</span><span>&nbsp;};&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.setContentType(<span class="string">"text/html"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;设置字符编码为UTF-8,&nbsp;这样支持汉字显示</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;response.setCharacterEncoding("GBK");</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;实例化一个硬盘文件工厂,用来配置上传组件ServletFileUpload</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DiskFileItemFactory&nbsp;dfif&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;DiskFileItemFactory();&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfif.setSizeThreshold(<span class="number">4096</span><span>);</span><span class="comment">//&nbsp;设置上传文件时用于临时存放文件的内存大小,这里是4K.多于的部分将临时存在硬盘</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfif.setRepository(<span class="keyword">new</span><span>&nbsp;File(request.getRealPath(</span><span class="string">"/"</span><span>)&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;<span class="string">"ImagesUploadTemp"</span><span>));</span><span class="comment">//&nbsp;设置存放临时文件的目录,web根目录下的ImagesUploadTemp目录</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;用以上工厂实例化上传组件</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServletFileUpload&nbsp;sfu&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;ServletFileUpload(dfif);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;设置最大上传尺寸</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sfu.setSizeMax(MAX_SIZE);&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PrintWriter&nbsp;out&nbsp;=&nbsp;response.getWriter();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;从request得到&nbsp;所有&nbsp;上传域的列表</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;fileList&nbsp;=&nbsp;<span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span><span>&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileList&nbsp;=&nbsp;sfu.parseRequest(request);&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="keyword">catch</span><span>&nbsp;(FileUploadException&nbsp;e)&nbsp;{</span><span class="comment">//&nbsp;处理文件尺寸过大异常</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(e&nbsp;</span><span class="keyword">instanceof</span><span>&nbsp;SizeLimitExceededException)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.print(<span class="string">"&lt;script&gt;alert('文件尺寸超过规定大小:"</span><span>&nbsp;+&nbsp;MAX_SIZE&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;<span class="string">"字节');history.back();&lt;/script&gt;"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;没有文件上传</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(fileList&nbsp;==&nbsp;</span><span class="keyword">null</span><span>&nbsp;||&nbsp;fileList.size()&nbsp;==&nbsp;</span><span class="number">0</span><span>)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.print(<span class="string">"&lt;script&gt;alert('请选择上传文件!');history.back();&lt;/script&gt;"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HashMap&lt;String,&nbsp;String&gt;&nbsp;paramMap&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;HashMap&lt;String,&nbsp;String&gt;();&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;得到所有上传的文件</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iterator&nbsp;fileItr&nbsp;=&nbsp;fileList.iterator();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;循环处理所有文件</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FileItem&nbsp;fileUp=&nbsp;<span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;path&nbsp;=&nbsp;<span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">while</span><span>&nbsp;(fileItr.hasNext())&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FileItem&nbsp;fileItem&nbsp;=&nbsp;<span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">long</span><span>&nbsp;size&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;得到当前文件</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileItem&nbsp;=&nbsp;(FileItem)&nbsp;fileItr.next();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;忽略简单form字段而不是上传域的文件域(&lt;input&nbsp;type="text"&nbsp;/&gt;等)</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(fileItem&nbsp;==&nbsp;</span><span class="keyword">null</span><span>&nbsp;||&nbsp;fileItem.isFormField())&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;formname=fileItem.getFieldName();<span class="comment">//获取form中的名字</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;formcontent=fileItem.getString();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;formname=<span class="keyword">new</span><span>&nbsp;String(formname.getBytes(),</span><span class="string">"GBK"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;formcontent=<span class="keyword">new</span><span>&nbsp;String(formcontent.getBytes(),</span><span class="string">"GBK"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;paramMap.put(formname,&nbsp;formcontent);&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span><span>{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//得到放文件的item</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileUp=&nbsp;fileItem;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;得到文件的完整路径</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path&nbsp;=&nbsp;fileItem.getName();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;得到文件的大小</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size&nbsp;=&nbsp;fileItem.getSize();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(</span><span class="string">""</span><span>.equals(path)&nbsp;||&nbsp;size&nbsp;==&nbsp;</span><span class="number">0</span><span>)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.print(<span class="string">"&lt;script&gt;alert('请选择上传文件!');history.back();&lt;/script&gt;"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;得到去除路径的文件名</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;t_name&nbsp;=&nbsp;path.substring(path.lastIndexOf(<span class="string">"\\"</span><span>)&nbsp;+&nbsp;</span><span class="number">1</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;得到文件的扩展名(无扩展名时将得到全名)</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;t_ext&nbsp;=&nbsp;t_name.substring(t_name.lastIndexOf(<span class="string">"."</span><span>)&nbsp;+&nbsp;</span><span class="number">1</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;拒绝接受规定文件格式之外的文件类型</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;allowFlag&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;allowedExtCount&nbsp;=&nbsp;allowedExt.length;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(;&nbsp;allowFlag&nbsp;&lt;&nbsp;allowedExtCount;&nbsp;allowFlag++)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(allowedExt[allowFlag].equals(t_ext))&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(allowFlag&nbsp;==&nbsp;allowedExtCount)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StringBuffer&nbsp;sb&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;StringBuffer();&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(allowFlag&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;allowFlag&nbsp;&lt;&nbsp;allowedExtCount;&nbsp;allowFlag++)&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sb.append(<span class="string">"*."</span><span>&nbsp;+&nbsp;allowedExt[allowFlag]);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.println(<span class="string">"&lt;script&gt;alert('请上传以下类型的文件"</span><span>&nbsp;+&nbsp;sb.toString()&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;<span class="string">"');history.back();&lt;/script&gt;"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">long</span><span>&nbsp;now&nbsp;=&nbsp;System.currentTimeMillis();&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;根据系统时间生成上传后保存的文件名</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;prefix&nbsp;=&nbsp;String.valueOf(now);&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;保存的最终文件完整路径,保存在web根目录下的ImagesUploaded目录下</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;u_name&nbsp;=&nbsp;request.getRealPath(<span class="string">"/"</span><span>)&nbsp;+&nbsp;</span><span class="string">"ImagesUploaded/"</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;prefix&nbsp;+&nbsp;<span class="string">"."</span><span>&nbsp;+&nbsp;t_ext;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;相对项目路径</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;file_url&nbsp;=&nbsp;request.getContextPath()&nbsp;+&nbsp;<span class="string">"/"</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;<span class="string">"ImagesUploaded/"</span><span>&nbsp;+&nbsp;prefix&nbsp;+&nbsp;</span><span class="string">"."</span><span>&nbsp;+&nbsp;t_ext;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span><span>&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;保存文件</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fileUp.write(<span class="keyword">new</span><span>&nbsp;File(u_name));&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.println(<span class="string">"&lt;script&nbsp;&nbsp;type='text/javascript'&gt;parent.KE.plugin[\"image\"].insert('"</span><span>&nbsp;+paramMap.get(</span><span class="string">"id"</span><span>)&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;<span class="string">"',&nbsp;'"</span><span>&nbsp;+&nbsp;file_url&nbsp;+&nbsp;</span><span class="string">"','"</span><span>&nbsp;+paramMap.get(</span><span class="string">"imgWidth"</span><span>)&nbsp;&nbsp;+&nbsp;</span><span class="string">"','"</span><span>&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+paramMap.get(<span class="string">"imgHeight"</span><span>)&nbsp;&nbsp;+&nbsp;</span><span class="string">"','"</span><span>&nbsp;+paramMap.get(</span><span class="string">"imgBorder"</span><span>)&nbsp;&nbsp;+&nbsp;</span><span class="string">"','"</span><span>&nbsp;+paramMap.get(</span><span class="string">"imgTitle"</span><span>)&nbsp;&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;<span class="string">"')&lt;/script&gt;"</span><span>);&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="keyword">catch</span><span>&nbsp;(Exception&nbsp;e)&nbsp;{&nbsp;&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div><pre title="用commons-fileupload实现的上传文件同时提交form中的参数" pre_index="0" source_url="http://www.iteye.com/topic/294750#793170" codeable_id="793170" codeable_type="Post" style="display: none;" name="code" class="java">public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		final long MAX_SIZE = 3 * 1024 * 1024;// 设置上传文件最大为 3M
+		// 允许上传的文件格式的列表
+		final String[] allowedExt = new String[] { "jpg", "jpeg", "gif","png" };		
+		
+		response.setContentType("text/html");
+		// 设置字符编码为UTF-8, 这样支持汉字显示
+		// response.setCharacterEncoding("GBK");
+
+		// 实例化一个硬盘文件工厂,用来配置上传组件ServletFileUpload
+		DiskFileItemFactory dfif = new DiskFileItemFactory();
+		dfif.setSizeThreshold(4096);// 设置上传文件时用于临时存放文件的内存大小,这里是4K.多于的部分将临时存在硬盘
+		dfif.setRepository(new File(request.getRealPath("/")
+				+ "ImagesUploadTemp"));// 设置存放临时文件的目录,web根目录下的ImagesUploadTemp目录
+
+		// 用以上工厂实例化上传组件
+		ServletFileUpload sfu = new ServletFileUpload(dfif);
+		// 设置最大上传尺寸
+		sfu.setSizeMax(MAX_SIZE);
+
+		PrintWriter out = response.getWriter();
+		// 从request得到 所有 上传域的列表
+		List fileList = null;
+		try {
+			fileList = sfu.parseRequest(request);
+		} catch (FileUploadException e) {// 处理文件尺寸过大异常
+			if (e instanceof SizeLimitExceededException) {
+				out.print("&lt;script&gt;alert('文件尺寸超过规定大小:" + MAX_SIZE
+						+ "字节');history.back();&lt;/script&gt;");
+				return;
+			}
+			e.printStackTrace();
+		}
+		// 没有文件上传
+		if (fileList == null || fileList.size() == 0) {
+			out.print("&lt;script&gt;alert('请选择上传文件!');history.back();&lt;/script&gt;");
+			return;
+		}
+		HashMap&lt;String, String&gt; paramMap = new HashMap&lt;String, String&gt;();
+		// 得到所有上传的文件
+		Iterator fileItr = fileList.iterator();
+		// 循环处理所有文件
+		FileItem fileUp= null;
+		String path = null;
+		while (fileItr.hasNext()) {
+			FileItem fileItem = null;
+			long size = 0;
+			// 得到当前文件
+			fileItem = (FileItem) fileItr.next();
+			// 忽略简单form字段而不是上传域的文件域(&lt;input type="text" /&gt;等)
+			if (fileItem == null || fileItem.isFormField()) {
+				String formname=fileItem.getFieldName();//获取form中的名字
+				String formcontent=fileItem.getString();
+				formname=new String(formname.getBytes(),"GBK");
+				formcontent=new String(formcontent.getBytes(),"GBK");
+				paramMap.put(formname, formcontent);
+			}
+			else{
+			//得到放文件的item
+			fileUp= fileItem;
+			// 得到文件的完整路径
+			path = fileItem.getName();
+			// 得到文件的大小
+			size = fileItem.getSize();
+			if ("".equals(path) || size == 0) {
+				out.print("&lt;script&gt;alert('请选择上传文件!');history.back();&lt;/script&gt;");
+				return;
+			}
+			
+			
+			
+			}
+			
+		}
+		// 得到去除路径的文件名
+		String t_name = path.substring(path.lastIndexOf("\\") + 1);
+		// 得到文件的扩展名(无扩展名时将得到全名)
+		String t_ext = t_name.substring(t_name.lastIndexOf(".") + 1);
+		// 拒绝接受规定文件格式之外的文件类型
+		int allowFlag = 0;
+		int allowedExtCount = allowedExt.length;
+		for (; allowFlag &lt; allowedExtCount; allowFlag++) {
+			if (allowedExt[allowFlag].equals(t_ext))
+				break;
+		}
+		if (allowFlag == allowedExtCount) {
+			StringBuffer sb = new StringBuffer();
+			for (allowFlag = 0; allowFlag &lt; allowedExtCount; allowFlag++)
+				sb.append("*." + allowedExt[allowFlag]);
+			out.println("&lt;script&gt;alert('请上传以下类型的文件" + sb.toString()
+					+ "');history.back();&lt;/script&gt;");
+			return;
+		}
+		long now = System.currentTimeMillis();
+		// 根据系统时间生成上传后保存的文件名
+		String prefix = String.valueOf(now);
+		// 保存的最终文件完整路径,保存在web根目录下的ImagesUploaded目录下
+		String u_name = request.getRealPath("/") + "ImagesUploaded/"
+				+ prefix + "." + t_ext;
+		// 相对项目路径
+		String file_url = request.getContextPath() + "/"
+				+ "ImagesUploaded/" + prefix + "." + t_ext;
+		try {
+			// 保存文件
+			fileUp.write(new File(u_name));
+			out.println("&lt;script  type='text/javascript'&gt;parent.KE.plugin[\"image\"].insert('" +paramMap.get("id")
+					+ "', '" + file_url + "','" +paramMap.get("imgWidth")  + "','"
+					+paramMap.get("imgHeight")  + "','" +paramMap.get("imgBorder")  + "','" +paramMap.get("imgTitle") 
+					+ "')&lt;/script&gt;");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}</pre>
+&nbsp;
+      </div>
+      
+
+              <div id="topic_copyright">声明：ITeye文章版权属于作者，受法律保护。没有作者书面许可不得转载。 </div>
+        <div id="forum_recommended_f5"><span>推荐链接</span><ul><li><a href="http://www.iteye.com/clicks/617" target="_blank"><span style="font-weight:bold;color:red">20-30万急聘多名天才Java/MTA软件工程师</span></a></li><li><a href="http://www.iteye.com/clicks/508" target="_blank"><span style="font-weight:bold;color:red">3G培训就业月薪平均7K+，不3K就业不花一分钱！</span></a></li><li><iframe src="294750_files/468x60v4.htm" frameborder="0" height="60" scrolling="no" width="468"></iframe></li><li><a href="http://www.iteye.com/clicks/527" target="_blank"><span style="font-weight:bold;color:red">见证又一个准百万富翁的诞生！</span></a></li></ul></div>
+                    <div id="forum_recommended_f0"></div>
+          </td>
+  </tr>
+  <tr>
+    <td class="postauthor"><a href="#">返回顶楼</a></td>
+    <td class="postcontent">
+      <div class="icons">
+        <a href="http://paskaa.iteye.com/" class="icon_www" title="浏览作者的博客">&nbsp;</a>
+        <a href="http://paskaa.iteye.com/blog/profile" class="icon_profile" title="浏览作者资料">&nbsp;</a>
+        <a href="http://app.iteye.com/messages/new?message%5Breceiver_name%5D=paskaa" class="icon_pm" title="发送站内短信">&nbsp;</a>
+        <a href="http://paskaa.iteye.com/blog/guest_book" class="icon_guestbook" title="给作者留言">&nbsp;</a>
+        <a href="http://app.iteye.com/feed?subscription%5Bsubscribed_user_name%5D=paskaa" class="icon_rss" onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;" title="关注作者">&nbsp;</a>
+              </div>
+                        </td>
+  </tr>
+  <tr class="sep2"><td colspan="2"></td></tr>
+
+  </tbody>
+</table>
+
+
+<div class="actions">
+  <div class="buttons"></div>
+  <div class="wrapper"></div>
+</div>
+
+<div>
+  <div class="crumbs">
+    <a href="http://www.iteye.com/forums">论坛首页</a> <span class="arrow">→</span>
+    <a href="http://www.iteye.com/forums/board/Java">Java编程和Java企业应用版</a>
+    
+    <br><br>跳转论坛:<select id="forum_urlname" name="forum[urlname]" onchange="window.location='/forums/board/'+this.value"><option value="Java" selected="selected">Java编程和Java企业应用</option>
+<option value="web">Web前端技术</option>
+<option value="mobile">移动编程和手机应用开发</option>
+<option value="cpp">C/C++编程</option>
+<option value="Ruby">Ruby编程</option>
+<option value="Python">Python编程</option>
+<option value="PHP">PHP编程</option>
+<option value="Flash">Flash编程和RIA</option>
+<option value="dotnet">Microsoft .Net</option>
+<option value="Tech">综合技术</option>
+<option value="develop">软件开发和项目管理</option>
+<option value="Industry">行业应用</option>
+<option value="New">入门讨论</option>
+<option value="Job">招聘求职</option>
+<option value="Life">海阔天空</option></select>
+     
+      <ul id="recommended_jobs" style="list-style-type:none;border:1px solid #f8aa4f;width:400px;height:110px;margin-top:5px;padding:7px 0;overflow:hidden;" onmousemove="marqueeing = false;" onmouseout="marqueeing = true;"><li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1555" target="_blank" title="北京:美团诚聘资深研发工程师（Java）">北京: 美团诚聘资深研发工程师（Java）</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/755" target="_blank" title="北京:杰嘉迪诚聘Java程序员">北京: 杰嘉迪诚聘Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1541" target="_blank" title="上海:大众点评诚聘Java高级开发工程师（上海）">上海: 大众点评诚聘Java高级开发工程师（上海）</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1803" target="_blank" title="上海:绿岸网络科技诚聘Java程序员">上海: 绿岸网络科技诚聘Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1231" target="_blank" title="北京:胡莱游戏诚聘年薪8-16万高级Java程序员">北京: 胡莱游戏诚聘年薪8-16万高级Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1987" target="_blank" title="北京:新华网诚聘高级Java开发工程师">北京: 新华网诚聘高级Java开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1144" target="_blank" title="陕西:ThoughtWorks诚聘西安Senior Java Application Developer">陕西: ThoughtWorks诚聘西安Senior Java Applicatio</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/2002" target="_blank" title="北京:东方国信诚聘资深Java软件开发工程师">北京: 东方国信诚聘资深Java软件开发工程师</a></li>
+        
+      
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1895" target="_blank" title="广东:范特西科技诚聘java后台开发工程师">广东: 范特西科技诚聘java后台开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1962" target="_blank" title="北京:新华网诚聘网站应用开发">北京: 新华网诚聘网站应用开发</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1916" target="_blank" title="北京:时代百合诚聘J2ME / ANDROID开发工程师">北京: 时代百合诚聘J2ME / ANDROID开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1904" target="_blank" title="四川:文轩在线诚聘JAVA开发工程师（高级）">四川: 文轩在线诚聘JAVA开发工程师（高级）</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1887" target="_blank" title="北京:国政通诚聘中级java工程师">北京: 国政通诚聘中级java工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/2030" target="_blank" title="广东:广州九娱《墨攻》诚聘资深java开发工程师">广东: 广州九娱《墨攻》诚聘资深java开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/750" target="_blank" title="北京:杰嘉迪诚聘高级Java程序员">北京: 杰嘉迪诚聘高级Java程序员</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1628" target="_blank" title="浙江:阿里巴巴诚聘高级Java工程师">浙江: 阿里巴巴诚聘高级Java工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1915" target="_blank" title="北京:时代百合诚聘Android开发工程师">北京: 时代百合诚聘Android开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1554" target="_blank" title="北京:美团诚聘研发工程师（Java）">北京: 美团诚聘研发工程师（Java）</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1858" target="_blank" title="北京:Coplogic诚聘 JAVA高级工程师 (15万-30万)">北京: Coplogic诚聘 JAVA高级工程师 (15万-30万)</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1905" target="_blank" title="四川:文轩在线诚聘JAVA开发工程师（初、中级）">四川: 文轩在线诚聘JAVA开发工程师（初、中级）</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1849" target="_blank" title="浙江:阿里巴巴诚聘C++开发工程师(搜索引擎和广告引擎方向，偏底层)">浙江: 阿里巴巴诚聘C++开发工程师(搜索引擎和广告</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1804" target="_blank" title="上海:绿岸网络科技诚聘Java高级软件工程师">上海: 绿岸网络科技诚聘Java高级软件工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1801" target="_blank" title="上海:绿岸网络科技诚聘java技术经理">上海: 绿岸网络科技诚聘java技术经理</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1790" target="_blank" title="上海:为为网诚聘JAVA高级开发工程师">上海: 为为网诚聘JAVA高级开发工程师</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1982" target="_blank" title="北京:云壤诚聘java中级软件开发工程师（J2ee）">北京: 云壤诚聘java中级软件开发工程师（J2ee）</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1827" target="_blank" title="上海:Scilearn China诚聘Java软件工程师（Web应用的服务器端）">上海: Scilearn China诚聘Java软件工程师（Web应用</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/712" target="_blank" title="北京:ITeye官方招聘和猎头诚聘ITeye网站诚聘Java高级搜索工程师">北京: ITeye官方招聘和猎头诚聘ITeye网站诚聘Java</a></li>
+        
+          <li style="padding-left:20px;margin-left:15px;background:transparent url(/images/board-tab-list.png) no-repeat scroll left center;"><a href="http://www.iteye.com/jobs/1415" target="_blank" title="上海:为为网诚聘JAVA软件开发工程师：">上海: 为为网诚聘JAVA软件开发工程师：</a></li>
+        
+          </ul>
+      <script type="text/javascript">
+        var marqueeing = true;
+        function marquee(){
+          if(marqueeing) {
+            var container=document.getElementById("recommended_jobs");
+            container.appendChild(container.firstChild);
+          }
+        }
+        setInterval("marquee()", 4000);
+      </script>
+    
+  </div>
+
+  
+</div>
+
+<div style="display:none">
+  <form action="/posts/rate" id="post_rate_form" method="post" onsubmit="new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this)}); return false;">
+    <input id="post_rate_id" name="id" type="hidden">
+    <input id="post_rate_type" name="type" type="hidden">
+  </form></div>
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  fix_image_size($$('div.postbody img'), 760);
+  
+  $$('#forum_main > #posts > tr[id]').each(function(tr){
+    var post_id = tr.id;
+    $$("#"+post_id+" pre[name=code]").each(function(pre, index){
+      var location = window.location;
+      source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+      source_url += "#" + post_id;
+      pre.writeAttribute('codeable_type', 'Post');
+      pre.writeAttribute('codeable_id', post_id);
+      pre.writeAttribute('source_url', source_url);
+      pre.writeAttribute('pre_index', index);
+      pre.writeAttribute('title', '用commons-fileupload实现的上传文件同时提交form中的参数');
+    });
+  });
+  code_favorites_init();
+
+  function rate_post(id, type) {
+    Element.update('post_rate_box_' + id, '提交中...');
+    new Ajax.Request('/posts/rate', {asynchronous:true, evalScripts:true, parameters:{"id":id, "type":type}});
+  }
+
+  function rate_topic(type) {
+    Element.update('topic_rate_box', '提交中...');
+    new Ajax.Request('/topics/rate', {asynchronous:true, evalScripts:true, parameters:{"id":294750, "type":type}});
+  }
+</script>
+
+
+
+        </div>
+        <div id="nav">
+  <div class="wrapper">
+    <ul>
+            <li><a href="http://www.iteye.com/">首页</a></li>
+      <li><a href="http://www.iteye.com/news">资讯</a></li>
+      <li><a href="http://www.iteye.com/magazines">精华</a></li>
+      <li><a href="http://www.iteye.com/forums" class="selected">论坛</a></li>
+      <li><a href="http://www.iteye.com/ask">问答</a></li>
+      <li><a href="http://www.iteye.com/blogs">博客</a></li>
+      <li><a href="http://www.iteye.com/groups">群组</a></li>
+      <li><a href="http://www.iteye.com/job">招聘</a></li>
+      <li class="last"><a href="http://www.iteye.com/search">搜索</a></li>
+    </ul>
+  </div>
+</div>
+
+      </div>
+      <div id="footer">
+  <div id="site_nav">
+    <ul>
+      <li><a href="http://www.iteye.com/index/service">广告服务</a></li>
+      <li><a href="http://webmaster.iteye.com/">ITeye黑板报</a></li>
+      <li><a href="http://www.iteye.com/index/contactus">联系我们</a></li>
+      <li class="last"><a href="http://www.iteye.com/index/friend_links">友情链接</a></li>
+    </ul>
+  </div>
+  <div id="copyright">
+    © 2003-2011 ITeye.com.    [ <a href="http://www.miibeian.gov.cn/">京ICP证110151号</a>  京公网安备110105010620 ]
+  </div>
+</div>
+
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.iteye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&user_id=' width='0' height='0' />");
+</script><img src="294750_files/a.gif" height="0" width="0">
+
+  
+
+</body></html>

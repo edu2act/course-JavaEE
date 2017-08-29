@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>08-03</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<jsp-config>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/math</taglib-uri>
+			<taglib-location>/Web-INF/tags/MathTag01.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/math02</taglib-uri>
+			<taglib-location>/Web-INF/tags/MathTag02.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/math03</taglib-uri>
+			<taglib-location>/Web-INF/tags/MathTag03.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/sample</taglib-uri>
+			<taglib-location>/Web-INF/tags/SampleLib.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/required</taglib-uri>
+			<taglib-location>/WEB-INF/tags/mytag.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/loop</taglib-uri>
+			<taglib-location>/WEB-INF/tags/loop.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://localhost:8080/08-03/mark</taglib-uri>
+			<taglib-location>/WEB-INF/tags/mark.tld</taglib-location>
+		</taglib>
+				<taglib>
+			<taglib-uri>http://localhost:8080/08-03/choose</taglib-uri>
+			<taglib-location>/WEB-INF/tags/choose.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+</web-app>

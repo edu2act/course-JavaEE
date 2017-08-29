@@ -1,0 +1,15 @@
+<fmt:formatNumber value="12" type="currency" pattern="＄.00"/> －－ ＄12.00
+
+<fmt:formatNumber value="12" type="currency" pattern="＄.0#"/> －－ ＄12.0
+
+<fmt:formatNumber value="1234567890" type="currency"/> －－ ＄1,234,567,890.00(那个货币的符号和当前web服务器的 local 设定有关)
+
+<fmt:formatNumber value="123456.7891" pattern="#,#00.0#"/> －－ 123,456.79
+
+<fmt:formatNumber value="123456.7" pattern="#,#00.0#"/> －－ 123,456.7
+
+<fmt:formatNumber value="123456.7" pattern="#,#00.00#"/> －－ 123,456.70
+
+<fmt:formatNumber value="12" type="percent" /> -- 1,200%type 可以是currency、 number、 和percent。
+ 
+

@@ -1,0 +1,79 @@
+JSP之page指令2008-03-10 16:15<%@ page 
+
+[ language="java" ] 
+
+[ extends="package.class" ] 
+
+[ import="{package.class | package.*}, ..." ] 
+
+[ session="true | false" ] 
+
+[ buffer="none | 8kb | sizekb" ] 
+
+[ autoFlush="true | false" ] 
+
+[ isThreadSafe="true | false" ] 
+
+[ info="text" ] 
+
+[ errorPage="relativeURL" ] 
+
+[ contentType="mimeType [ ;charset=characterSet ]" | "text/html ; charset=ISO-8859-1" ] 
+
+[ isErrorPage="true | false" ] 
+
+%> 
+例子         
+<%@ page import="java.util.*, java.lang.*" %> 
+
+<%@ page buffer="5kb" autoFlush="false" %> 
+
+<%@ page errorPage="error.jsp" %>       
+描述
+<%@ page %>指令作用于整个JSP页面，同样包括静态的包含文件。但是<% @ page %>指令不能作用于动态的包含文件，比如 <jsp:include> 
+
+你可以在一个页面中用上多个<% @ page %>指令，但是其中的属性只能用一次，不过也有个例外，那就是import属性。因为import属性和Java中的import语句差不多(参照Java Language)，所以你就能多用此属性几次了. 
+
+无论你把<% @ page %>指令放在JSP的文件的哪个地方，它的作用范围都是整个JSP页面。不过，为了JSP程序的可读性，以及好的编程习惯，最好还是把它放在JSP文件的顶部. 
+
+属性
+language="java"
+声明脚本语言的种类，暂时只能用"java" 
+
+extends="package.class"
+标明JSP编译时需要加入的Java Class的全名，但是得慎重的使用它，它会限制JSP的编译能力. 
+
+import="{package.class | package.* }, ..."
+需要导入的Java包的列表，这些包就作用于程序段，表达式，以及声明。 
+
+下面的包在JSP编译时已经导入了，所以你就不需要再指明了: 
+
+java.lang.* 
+javax.servlet.* 
+javax.servlet.jsp.* 
+javax.servlet.http.* 
+
+session="true | false"
+设定客户是否需要HTTP Session.（学过ASP的人，应该对它不陌生)如果它为true,那么Session是有用的。 
+
+如果它有false,那么你就不能使用session对象，以及定义了scope=session的<jsp:useBean>元素。这样的使用会导致错误. 
+
+缺省值是true. 
+
+buffer="none | 8kb | sizekb"
+buffer的大小被out对象用于处理执行后的JSP对客户浏览器的输出。缺省值是8kb 
+
+autoFlush="true | false"
+设置如果buffer溢出，是否需要强制输出，如果其值被定义为true(缺省值)，输出正常，如果它被设置为false,如果这个buffer溢出，就会导致一个意外错误的发生.如果你把buffer设置为none,那么你就不能把autoFlush设置为false. 
+
+isThreadSafe="true | false"
+设置Jsp文件是否能多线程使用。缺省值是true,也就是说，JSP能够同时处理多个用户的请求，如果设置为false，一个jsp只能一次处理一个请求 
+
+info="text"
+一个文本在执行JSP将会被逐字加入JSP中，你能够使用Servlet.getServletInfo方法取回。 
+
+errorPage="relativeURL"
+设置处理异常事件的JSP文件。 
+
+isErrorPage="true | false"
+设置此页是否为出错页，如果被设置为true,你就能使用exception对象.

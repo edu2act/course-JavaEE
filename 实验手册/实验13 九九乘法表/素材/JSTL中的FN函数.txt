@@ -1,0 +1,233 @@
+JSTL中的 FN函数
+2009年03月06日 星期五 09:31
+
+今天在处理表中数据的时候,因为一个单元格里的数据太多,所以决定截取前面的一段就可以了,于是用了JSTL中的fn函数:
+
+<%@ taglib uri="htp://java.sun.com/jsp/jstl/functions" prefix="fn"%>              
+
+<ec:column width="350" property="logDetail" title="操作内容">
+
+     <c:if test="${fn:length(logList.logDetail) > 10}">
+
+         ${fn:substring(logList.logDetail,0,10) }...
+
+     </c:if>
+
+</ec:column>
+
+===以下是网上找到的 FN函数 的使用====摘自:http://hi.baidu.com/yanghlcn
+
+字符串处理函数：fn:contains、fn:containsIgnoreCase、fn:endsWith、fn:escapeXml、 fn:indexOf、fn:join、fn:replace、fn:split、fn:startsWith、fn:substring、 fn:substringAfter、fn:substringBefore、fn:toLowerCase、fn:toUpperCase、 fn:trim
+
+以下是各个函数的用途和属性以及简单示例。
+
+长度函数fn:length函数
+
+长度函数fn:length的出现有重要的意义。在JSTL1.0中，有一个功能被忽略了，那就是对集合的长度取值。虽然java.util.Collection接口定义了size方法，但是该方法不是一个标准的JavaBean属性方法（没有get,set方法），因此，无法通过EL表达式“${collection.size}”来轻松取得。
+
+fn:length函数正是为了解决这个问题而被设计出来的。它的参数为input，将计算通过该属性传入的对象长度。该对象应该为集合类型或String类型。其返回结果是一个int类型的值。下面看一个示例。
+
+<%ArrayList arrayList1 = new ArrayList();
+
+arrayList1.add("aa");
+
+arrayList1.add("bb");
+
+arrayList1.add("cc");
+
+%>
+
+<%request.getSession().setAttribute("arrayList1", arrayList1);%>
+
+${fn:length(sessionScope.arrayList1)}
+
+假设一个ArrayList类型的实例“arrayList1”，并为其添加三个字符串对象，使用fn:length函数后就可以取得返回结果为“3”。
+
+9.7.2 判断函数fn:contains函数
+
+fn:contains函数用来判断源字符串是否包含子字符串。它包括string和substring两个参数，它们都是String类型，分布表示源字符串和子字符串。其返回结果为一个boolean类型的值。下面看一个示例。
+
+${fn:contains("ABC", "a")}<br>
+
+${fn:contains("ABC", "A")}<br>
+
+前者返回“false”，后者返回“true”。
+
+9.7.3 fn:containsIgnoreCase函数
+
+fn:containsIgnoreCase函数与fn:contains函数的功能差不多，唯一的区别是fn:containsIgnoreCase函数对于子字符串的包含比较将忽略大小写。它与fn:contains函数相同，包括 string和substring两个参数，并返回一个boolean类型的值。下面看一个示例。
+
+${fn:containsIgnoreCase("ABC", "a")}<br>
+
+${fn:containsIgnoreCase("ABC", "A")}<br>
+
+前者和后者都会返回“true”。
+
+9.7.4 词头判断函数fn:startsWith函数
+
+fn:startsWith函数用来判断源字符串是否符合一连串的特定词头。它除了包含一个string参数外，还包含一个subffx参数，表示词头字符串，同样是String类型。该函数返回一个boolean类型的值。下面看一个示例。
+
+${fn:startsWith ("ABC", "ab")}<br>
+
+${fn:startsWith ("ABC", "AB")}<br>
+
+前者返回“false”，后者返回“true”。
+
+9.7.5 词尾判断函数fn:endsWith函数
+
+fn:endsWith函数用来判断源字符串是否符合一连串的特定词尾。它与fn:startsWith函数相同，包括string和subffx两个参数，并返回一个boolean类型的值。下面看一个示例。
+
+${fn:endsWith("ABC", "bc")}<br> ${fn:endsWith("ABC", "BC")}<br>
+
+前者返回“false”，后者返回“true”。
+
+9.7.6 字符实体转换函数fn:escapeXml函数
+
+fn:escapeXml函数用于将所有特殊字符转化为字符实体码。它只包含一个string参数，返回一个String类型的值。
+
+9.7.8 字符匹配函数fn:indexOf函数
+
+fn:indexOf函数用于取得子字符串与源字符串匹配的开始位置，若子字符串与源字符串中的内容没有匹配成功将返回“-1”。它包括string和substring两个参数，返回结果为int类型。下面看一个示例。
+
+${fn:indexOf("ABCD","aBC")}<br> ${fn:indexOf("ABCD","BC")}<br>
+
+前者由于没有匹配成功，所以返回-1，后者匹配成功将返回位置的下标，为1。
+
+9.7.9 分隔符函数fn:join函数
+
+fn:join函数允许为一个字符串数组中的每一个字符串加上分隔符，并连接起来。它的参数、返回结果和描述如表9.25所示：
+
+表9.25　fn:join函数
+
+下面看一个示例。
+
+<% String[] stringArray = {"a","b","c"}; %>
+
+<%request.getSession().setAttribute("stringArray", stringArray);%>
+
+${fn:join(sessionScope.stringArray,";")}<br>
+
+定义数组并放置到Session中，然后通过Session得到该字符串数组，使用fn:join函数并传入分隔符“;”，得到的结果为“a;b;c”。
+
+9.7.10 替换函数fn:replace函数
+
+fn:replace函数允许为源字符串做替换的工作。它的参数、返回结果和描述如表9.26所示：
+
+表9.26　 fn:replace函数
+
+下面看一个示例。
+
+${fn:replace("ABC","A","B")}<br>
+
+将“ABC”字符串替换为“BBC”，在“ABC”字符串中用“B”替换了“A”。
+
+9.7.11 分隔符转换数组函数fn:split函数
+
+fn:split函数用于将一组由分隔符分隔的字符串转换成字符串数组。它的参数、返回结果和描述如表9.27所示：
+
+表9.27　 fn:split函数
+
+下面看一个示例。
+
+${fn:split("A,B,C",",")}<br>
+
+将“A,B,C”字符串转换为数组{A,B,C}。
+
+9.7.12 字符串截取函数fn:substring函数
+
+fn:substring函数用于截取字符串。它的参数、返回结果和描述如表9.28所示：
+
+表9.28　 fn:substring函数, 下面看一个示例。
+
+${fn:substring("ABC","1","2")}<br>
+
+截取结果为“B”。
+
+具体使用方法请参见下表：
+
+函数
+	
+
+描述
+
+fn:contains(string, substring)
+	
+
+如果参数string中包含参数substring，返回true
+
+fn:containsIgnoreCase(string, substring)
+	
+
+如果参数string中包含参数substring（忽略大小写），返回true
+
+fn:endsWith(string, suffix)
+	
+
+如果参数 string 以参数suffix结尾，返回true
+
+fn:escapeXml(string)
+	
+
+将有特殊意义的XML (和HTML)转换为对应的XML character entity code，并返回
+
+fn:indexOf(string, substring)
+	
+
+返回参数substring在参数string中第一次出现的位置
+
+fn:join(array, separator)
+	
+
+将一个给定的数组array用给定的间隔符separator串在一起，组成一个新的字符串并返回。
+
+fn:length(item)
+	
+
+返回参数item中包含元素的数量。参数Item类型是数组、collection或者String。如果是String类型,返回值是String中的字符数。
+
+fn:replace(string, before, after)
+	
+
+返回一个String对象。用参数after字符串替换参数string中所有出现参数before字符串的地方，并返回替换后的结果
+
+fn:split(string, separator)
+	
+
+返回一个数组，以参数separator 为分割符分割参数string，分割后的每一部分就是数组的一个元素
+
+fn:startsWith(string, prefix)
+	
+
+如果参数string以参数prefix
+
+开头，返回true
+
+fn:substring(string, begin, end)
+	
+
+返回参数string部分字符串, 从参数begin开始到参数end位置，包括end位置的字符
+
+fn:substringAfter(string, substring)
+	
+
+返回参数substring在参数string中后面的那一部分字符串
+
+fn:substringBefore(string, substring)
+	
+
+返回参数substring在参数string中前面的那一部分字符串
+
+fn:toLowerCase(string)
+	
+
+将参数string所有的字符变为小写，并将其返回
+
+fn:toUpperCase(string)
+	
+
+将参数string所有的字符变为大写，并将其返回
+
+fn:trim(string)
+	
+
+去除参数string 首尾的空格，并将其返回
