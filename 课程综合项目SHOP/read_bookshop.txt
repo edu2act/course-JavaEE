@@ -1,0 +1,8 @@
+bookshop项目部署
+1.下载bookshop.rar到本地。
+2.解压缩bookshop.rar
+3.在eclipse中新建一个动态 web project 名字为bookshop。
+4.将bookshop.rar解压缩所有文件拷贝到新建项目bookshop下。
+5.在mysql数据库中创建数据库bookshop 端口号为3306 用户名为root 密码为空
+6.将bookshop.rar解压的docs文件夹下的bookshop.sql直接复制到mysql数据库中运行即可创建bookshop数据库
+7.在eclipse直接运行bookshop项目即可。
