@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" buffer="2kb" autoFlush="false"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,10 +8,19 @@
 </head>
 <body>
 	<%
-		for(int i=0;i<100000;i++){
-			out.print(i);
-			//out.flush();
+		for(int i=0;i<10;i++){
+			out.print("<hr>");
 		}
 	%>
+	
+	<%
+		for(int i=0;i<10;i++){
+			%>
+			<hr>
+			<%
+		}
+	%>
+	<a href="request.jsp?name=你好">request</a><br>
+	<a href="jspconfig">jsp config</a>
 </body>
 </html>
